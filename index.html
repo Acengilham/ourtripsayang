@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our 3-Day Getaway Planner ❤️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --pink: #ff6b9e;
+            --dark-pink: #e84393;
+            --purple: #a55eea;
+            --blue: #45aaf2;
+            --green: #26de81;
+            --yellow: #f9ca24;
+            --orange: #fd9644;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background-color: #fef6f9;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Login Page */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(255,107,158,0.1), rgba(165,94,234,0.1));
+            padding: 20px;
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, var(--pink), var(--purple));
+        }
+        
+        .login-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--dark-pink);
+            font-weight: 700;
+        }
+        
+        .login-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: var(--pink);
+            outline: none;
+        }
+        
+        .date-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .date-input select {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .error-message {
+            color: #ff4757;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        /* Main App */
+        .app-container {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--yellow), var(--green));
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .city-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            scrollbar-width: none;
+        }
+        
+        .city-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .city-tab {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        .city-tab.active {
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: white;
+        }
+        
+        .destinations {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .destination-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .destination-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .destination-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+        }
+        
+        .destination-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--orange);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .destination-name {
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            z-index: 2;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .destination-info {
+            padding: 20px;
+        }
+        
+        .destination-description {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .destination-highlights {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .highlight {
+            background-color: #f3e5f5;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--purple);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .highlight i {
+            font-size: 0.9rem;
+        }
+        
+        .choose-btn {
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+            display: block;
+            width: 100%;
+        }
+        
+        .choose-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Detail Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 800px;
+            margin: 30px auto;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.2);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+        
+        .modal-header {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .modal-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2));
+        }
+        
+        .modal-title {
+            position: absolute;
+            bottom: 20px;
+            left: 30px;
+            color: white;
+            z-index: 1;
+        }
+        
+        .modal-title h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .modal-body {
+            padding: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            color: var(--dark-pink);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--purple);
+        }
+        
+        .itinerary-day {
+            margin-bottom: 25px;
+            border-left: 3px solid var(--pink);
+            padding-left: 15px;
+        }
+        
+        .day-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .activity {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .activity-desc {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        
+        .activity-transport {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+        
+        .transport-icon {
+            width: 20px;
+            text-align: center;
+            color: var(--purple);
+        }
+        
+        .budget-summary {
+            background: #f0f7ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .budget-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .budget-total {
+            font-weight: 600;
+            color: var(--dark-pink);
+            font-size: 1.1rem;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--pink);
+        }
+        
+        .modal-footer {
+            padding: 20px 30px;
+            background: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .book-now-btn {
+            background: linear-gradient(135deg, var(--green), var(--blue));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .book-now-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .request-other {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .request-btn {
+            background: linear-gradient(135deg, var(--green), var(--blue));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .request-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        /* Floating Hearts */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart {
+            position: absolute;
+            opacity: 0;
+            font-size: 20px;
+            color: var(--pink);
+            animation: float 6s ease-in infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-500px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 30px 20px;
+            }
+            
+            .login-title {
+                font-size: 1.8rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .destinations {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 10px auto;
+            }
+            
+            .modal-body {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="login-page">
+        <div class="login-box">
+            <h1 class="login-title">Our 3-Day Getaway ❤️</h1>
+            <p class="login-subtitle">Masukkan password spesial untuk melihat rencana liburan kita</p>
+            
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Masukkan nama tengah pacar kamu">
+                <div class="error-message" id="username-error">Username salah! Coba ingat-ingat lagi sayang</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Tanggal Lahir Kamu</label>
+                <div class="date-input">
+                    <select id="day">
+                        <option value="">Hari</option>
+                        <script>
+                            for(let i = 1; i <= 31; i++) {
+                                document.write(`<option value="${i < 10 ? '0'+i : i}">${i}</option>`);
+                            }
+                        </script>
+                    </select>
+                    <select id="month">
+                        <option value="">Bulan</option>
+                        <script>
+                            for(let i = 1; i <= 12; i++) {
+                                document.write(`<option value="${i < 10 ? '0'+i : i}">${i}</option>`);
+                            }
+                        </script>
+                    </select>
+                    <select id="year">
+                        <option value="">Tahun</option>
+                        <script>
+                            for(let i = 2000; i <= 2010; i++) {
+                                document.write(`<option value="${i}">${i}</option>`);
+                            }
+                        </script>
+                    </select>
+                </div>
+                <div class="error-message" id="password-error">Tanggal lahirnya belum tepat nih, coba lagi ya</div>
+            </div>
+            
+            <button class="login-btn" id="login-btn">Buka Rencana Kita</button>
+        </div>
+    </div>
+    
+    <!-- Main App -->
+    <div class="app-container" id="app-container">
+        <div class="floating-hearts" id="hearts-container"></div>
+        
+        <header>
+            <h1>Our 3-Day Romantic Getaway ❤️</h1>
+            <div class="subtitle">Pilih destinasi favoritmu untuk liburan 3 hari kita berdua</div>
+        </header>
+        
+        <div class="city-tabs" id="city-tabs">
+            <div class="city-tab active" onclick="filterDestinations('all')">Semua</div>
+            <div class="city-tab" onclick="filterDestinations('bandung')">Bandung</div>
+            <div class="city-tab" onclick="filterDestinations('jogja')">Jogjakarta</div>
+            <div class="city-tab" onclick="filterDestinations('jakarta')">Jakarta</div>
+        </div>
+        
+        <div class="destinations" id="destinations-container">
+            <!-- Bandung - Lembang -->
+            <div class="destination-card" data-city="bandung">
+                <div class="destination-image" style="background-image: url('https://lh7-rt.googleusercontent.com/docsz/AD_4nXdU_KB5JvU1n33Hg9tNdBNB2sVjVb524x0SNWXMbbMmtk2DtqkhXJPHIgNjJjOPVCTgh5VlocD9p-6VtIj_G9zQUqkqJKs6pDs9FesTk98DdbV56pxt0ASdYglYlznqmtei4SV5JeFw1pY0o-rSIUghK-rC?key=yCsoNXMOamZOXkO99wwOXg');">
+                    <span class="destination-tag">Best Seller</span>
+                    <h3 class="destination-name">Lembang</h3>
+                </div>
+                <div class="destination-info">
+                    <p class="destination-description">Glamping romantis dengan pemandangan gunung dan kafe aesthetic</p>
+                    <div class="destination-highlights">
+                        <span class="highlight"><i class="fas fa-train"></i> KA Serayu</span>
+                        <span class="highlight"><i class="fas fa-walking"></i> Jalan Kaki</span>
+                        <span class="highlight"><i class="fas fa-car"></i> Grab</span>
+                    </div>
+                    <button class="choose-btn" onclick="showDetail('bandung-lembang')">Lihat Detail</button>
+                </div>
+            </div>
+            
+            <!-- Bandung - The Lodge -->
+            <div class="destination-card" data-city="bandung">
+                <div class="destination-image" style="background-image: url('https://desadalung.badungkab.go.id/storage/desadalung/image/The%20Lodge%20Maribaya%20Destinasi%20Wisata%20Favorit%20dengan%20Spot%20Foto%20Instagramable.jpeg');">
+                    <span class="destination-tag">Luxury</span>
+                    <h3 class="destination-name">The Lodge Maribaya</h3>
+                </div>
+                <div class="destination-info">
+                    <p class="destination-description">Resort glamping mewah di tengah hutan pinus</p>
+                    <div class="destination-highlights">
+                        <span class="highlight"><i class="fas fa-train"></i> KA Argo Parahyangan</span>
+                        <span class="highlight"><i class="fas fa-car"></i> Grab</span>
+                        <span class="highlight"><i class="fas fa-utensils"></i> Breakfast</span>
+                    </div>
+                    <button class="choose-btn" onclick="showDetail('bandung-lodge')">Lihat Detail</button>
+                </div>
+            </div>
+            
+            <!-- Jogja - Borobudur -->
+            <div class="destination-card" data-city="jogja">
+                <div class="destination-image" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/31/The_Great_of_Borobudur_Temple.jpg');">
+                    <span class="destination-tag">Iconic</span>
+                    <h3 class="destination-name">Borobudur</h3>
+                </div>
+                <div class="destination-info">
+                    <p class="destination-description">Sunrise romantis di candi Buddha terbesar di dunia</p>
+                    <div class="destination-highlights">
+                        <span class="highlight"><i class="fas fa-train"></i> KA Lodaya</span>
+                        <span class="highlight"><i class="fas fa-bus"></i> Shuttle</span>
+                        <span class="highlight"><i class="fas fa-sun"></i> Sunrise</span>
+                    </div>
+                    <button class="choose-btn" onclick="showDetail('jogja-borobudur')">Lihat Detail</button>
+                </div>
+            </div>
+            
+            <!-- Jogja - Malioboro -->
+            <div class="destination-card" data-city="jogja">
+                <div class="destination-image" style="background-image: url('https://www.yogyes.com/id/yogyakarta-tourism-object/other/malioboro/3.jpg');">
+                    <span class="destination-tag">Cultural</span>
+                    <h3 class="destination-name">Malioboro</h3>
+                </div>
+                <div class="destination-info">
+                    <p class="destination-description">Jalan-jalan malam romantis di jantung Jogja</p>
+                    <div class="destination-highlights">
+                        <span class="highlight"><i class="fas fa-train"></i> KA Prameks</span>
+                        <span class="highlight"><i class="fas fa-walking"></i> Jalan Kaki</span>
+                        <span class="highlight"><i class="fas fa-utensils"></i> Kuliner</span>
+                    </div>
+                    <button class="choose-btn" onclick="showDetail('jogja-malioboro')">Lihat Detail</button>
+                </div>
+            </div>
+            
+            <!-- Jakarta - Ancol -->
+            <div class="destination-card" data-city="jakarta">
+                <div class="destination-image" style="background-image: url('https://www.ancol.com/blog/wp-content/uploads/2024/10/ancol-beach-city.jpg');">
+                    <span class="destination-tag">Beach</span>
+                    <h3 class="destination-name">Ancol Beach City</h3>
+                </div>
+                <div class="destination-info">
+                    <p class="destination-description">Pantai kota dengan wahana dan restoran romantis</p>
+                    <div class="destination-highlights">
+                        <span class="highlight"><i class="fas fa-train"></i> Commuter Line</span>
+                        <span class="highlight"><i class="fas fa-car"></i> Grab</span>
+                        <span class="highlight"><i class="fas fa-umbrella-beach"></i> Pantai</span>
+                    </div>
+                    <button class="choose-btn" onclick="showDetail('jakarta-ancol')">Lihat Detail</button>
+                </div>
+            </div>
+            
+            <!-- Jakarta - PIK -->
+            <div class="destination-card" data-city="jakarta">
+                <div class="destination-image" style="background-image: url('https://awsimages.detik.net.id/community/media/visual/2023/07/10/aloha-pik-2_169.jpeg?w=600&q=90');">
+                    <span class="destination-tag">Modern</span>
+                    <h3 class="destination-name">PIK 2</h3>
+                </div>
+                <div class="destination-info">
+                    <p class="destination-description">Kawasan kuliner dan hiburan mewah ala Venice</p>
+                    <div class="destination-highlights">
+                        <span class="highlight"><i class="fas fa-car"></i> Grab</span>
+                        <span class="highlight"><i class="fas fa-utensils"></i> Kuliner</span>
+                        <span class="highlight"><i class="fas fa-camera"></i> Foto</span>
+                    </div>
+                    <button class="choose-btn" onclick="showDetail('jakarta-pik')">Lihat Detail</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="request-other">
+            <button class="request-btn" onclick="requestOtherDestination()">
+                <i class="fas fa-map-marked-alt"></i> Punya Destinasi Lain?
+            </button>
+        </div>
+        
+        <!-- Detail Modals -->
+        <!-- Bandung - Lembang -->
+        <div class="modal" id="bandung-lembang-modal">
+            <div class="modal-content">
+                <div class="close-modal" onclick="closeModal()">&times;</div>
+                <div class="modal-header" style="background-image: url('https://lh7-rt.googleusercontent.com/docsz/AD_4nXdU_KB5JvU1n33Hg9tNdBNB2sVjVb524x0SNWXMbbMmtk2DtqkhXJPHIgNjJjOPVCTgh5VlocD9p-6VtIj_G9zQUqkqJKs6pDs9FesTk98DdbV56pxt0ASdYglYlznqmtei4SV5JeFw1pY0o-rSIUghK-rC?key=yCsoNXMOamZOXkO99wwOXg');">
+                    <div class="modal-title">
+                        <h2>Lembang, Bandung</h2>
+                        <p>3 Hari Glamping Romantis</p>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="section-title">
+                        <i class="fas fa-map-marked-alt"></i> Tentang Perjalanan
+                    </div>
+                    <p>Nikmati 3 hari di Lembang dengan glamping romantis, udara sejuk, dan pemandangan gunung. Perjalanan menggunakan kereta dari Karawang ke Bandung, lalu transportasi Grab ke Lembang. Budget dihitung berdasarkan harga terbaru dan terjangkau untuk pasangan.</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-train"></i> Rute Kereta
+                    </div>
+                    <p><strong>Karawang → Bandung</strong>: Naik KA Serayu Pagi (Berangkat 06.30 - Tiba 09.45) atau KA Argo Parahyangan (Berangkat 08.00 - Tiba 10.15). Turun di Stasiun Bandung.</p>
+                    <p><strong>Bandung → Lembang</strong>: GrabCar sekitar 45 menit (Rp 80-100rb).</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-calendar-alt"></i> Itinerary 3 Hari
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-sun"></i> Hari 1: Perjalanan & Check-in
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 06.30 - Berangkat dari Karawang
+                            </div>
+                            <div class="activity-desc">Naik KA Serayu dari Stasiun Karawang ke Bandung (tiket ekonomi Rp 60rb/orang, total Rp 120rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta Api (3 jam)</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-car"></i> 10.00 - Perjalanan ke Lembang
+                            </div>
+                            <div class="activity-desc">Naik GrabCar dari Stasiun Bandung ke penginapan di Lembang (Rp 80-100rb).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-car"></i></span>
+                                <span>GrabCar (45 menit)</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 11.00 - Check-in Glamping
+                            </div>
+                            <div class="activity-desc">Check-in di Bobocabin (Rp 600rb/malam termasuk breakfast) atau penginapan lokal terjangkau seperti Homestay Lembang (Rp 300rb/malam).</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-utensils"></i> 12.30 - Makan Siang
+                            </div>
+                            <div class="activity-desc">Makan siang di Kampung Daun Resto (Rp 100-150rb/orang) atau Warung Lela (Rp 50rb/orang) dengan suasana alam.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-camera"></i> 15.00 - Wisata De Ranch
+                            </div>
+                            <div class="activity-desc">Bermain di De Ranch Lembang (Rp 50rb/orang) dengan aktivitas berkuda dan foto-foto ala koboi.</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-car"></i></span>
+                                <span>GrabCar (Rp 30rb)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-map"></i> Hari 2: Explore Lembang
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-sunrise"></i> 05.30 - Sunrise di Tebing Keraton
+                            </div>
+                            <div class="activity-desc">Naik Grab ke Tebing Keraton (Rp 30rb) untuk melihat sunrise dengan pemandangan Bandung (tiket masuk Rp 30rb/orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-car"></i></span>
+                                <span>GrabCar (15 menit)</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-coffee"></i> 09.00 - Kafe Hunting
+                            </div>
+                            <div class="activity-desc">Jelajahi kafe aesthetic seperti The Valley Bistro (Rp 50-80rb/orang) atau Rabbit Hole (Rp 40-70rb/orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-walking"></i></span>
+                                <span>Jalan Kaki</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-shopping-bag"></i> 14.00 - Pasar Oleh-oleh
+                            </div>
+                            <div class="activity-desc">Beli oleh-oleh di Pasar Kosambi (Rp 50-100rb) seperti brownies, dodol, atau strawberry.</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-car"></i></span>
+                                <span>GrabCar (Rp 25rb)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-suitcase"></i> Hari 3: Pulang
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 10.00 - Check-out
+                            </div>
+                            <div class="activity-desc">Check-out dari penginapan dan beli oleh-oleh tambahan jika diperlukan.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 12.00 - Kembali ke Karawang
+                            </div>
+                            <div class="activity-desc">Naik KA Argo Parahyangan dari Bandung ke Karawang (tiket eksekutif Rp 120rb/orang, total Rp 240rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta Api (2.5 jam)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-wallet"></i> Perkiraan Budget (untuk 2 orang)
+                    </div>
+                    <div class="budget-summary">
+                        <div class="budget-item">
+                            <span>Transportasi Kereta (PP)</span>
+                            <span>Rp 360rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Penginapan 2 Malam (Homestay)</span>
+                            <span>Rp 600rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Transportasi Lokal (Grab)</span>
+                            <span>Rp 250rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Tiket Masuk Tempat Wisata</span>
+                            <span>Rp 160rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Makan & Minum (3 hari)</span>
+                            <span>Rp 600rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Oleh-oleh</span>
+                            <span>Rp 200rb</span>
+                        </div>
+                        <div class="budget-total">
+                            <span>Total Perkiraan Budget</span>
+                            <span>Rp 2.1jt - 2.5jt</span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">*Harga dapat berubah tergantung musim dan preferensi</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="book-now-btn" onclick="sendSelection('Lembang Bandung 3D2N')">
+                        <i class="fas fa-paper-plane"></i> Kirim ke WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bandung - The Lodge -->
+        <div class="modal" id="bandung-lodge-modal">
+            <div class="modal-content">
+                <div class="close-modal" onclick="closeModal()">&times;</div>
+                <div class="modal-header" style="background-image: url('https://desadalung.badungkab.go.id/storage/desadalung/image/The%20Lodge%20Maribaya%20Destinasi%20Wisata%20Favorit%20dengan%20Spot%20Foto%20Instagramable.jpeg');">
+                    <div class="modal-title">
+                        <h2>The Lodge Maribaya</h2>
+                        <p>3 Hari Glamping Mewah</p>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="section-title">
+                        <i class="fas fa-map-marked-alt"></i> Tentang Perjalanan
+                    </div>
+                    <p>Pengalaman glamping mewah di The Lodge Maribaya dengan pemandangan hutan pinus dan kolam air panas. Perjalanan menggunakan kereta eksekutif ke Bandung lalu Grab ke lokasi. Budget termasuk pilihan penginapan terjangkau dengan kualitas bagus.</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-train"></i> Rute Kereta
+                    </div>
+                    <p><strong>Karawang → Bandung</strong>: Naik KA Argo Parahyangan Pagi (Berangkat 08.00 - Tiba 10.15). Turun di Stasiun Bandung.</p>
+                    <p><strong>Bandung → The Lodge</strong>: GrabCar sekitar 1 jam (Rp 100-120rb).</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-calendar-alt"></i> Itinerary 3 Hari
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-sun"></i> Hari 1: Perjalanan & Check-in
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 08.00 - Berangkat dari Karawang
+                            </div>
+                            <div class="activity-desc">Naik KA Argo Parahyangan eksekutif (Rp 120rb/orang, total Rp 240rb untuk 2 orang) dengan fasilitas nyaman.</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta Api (2.5 jam)</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-car"></i> 10.30 - Perjalanan ke The Lodge
+                            </div>
+                            <div class="activity-desc">Naik GrabCar ke The Lodge Maribaya (Rp 100-120rb) melalui jalan yang indah.</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-car"></i></span>
+                                <span>GrabCar (1 jam)</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 11.30 - Check-in Penginapan
+                            </div>
+                            <div class="activity-desc">Check-in di The Lodge Maribaya (Rp 800rb/malam) atau alternatif terjangkau seperti Glamping Lakeside Rancabali (Rp 500rb/malam).</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-utensils"></i> 13.00 - Makan Siang
+                            </div>
+                            <div class="activity-desc">Makan siang di The Lodge Cafe (Rp 120-150rb/orang) atau warung lokal (Rp 50rb/orang).</div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-map"></i> Hari 2: Explore Maribaya
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-tree"></i> 08.00 - Tracking Hutan Pinus
+                            </div>
+                            <div class="activity-desc">Jalan-jalan pagi di sekitar hutan pinus Maribaya (gratis) sambil menikmati udara segar.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-swimming-pool"></i> 10.00 - Kolam Air Panas
+                            </div>
+                            <div class="activity-desc">Berendam di kolam air panas Maribaya (Rp 50rb/orang) untuk relaksasi.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-camera"></i> 15.00 - Foto di Tebing Keraton
+                            </div>
+                            <div class="activity-desc">Kunjungi Tebing Keraton (Rp 30rb/orang) untuk pemandangan spektakuler dan foto romantis.</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-car"></i></span>
+                                <span>GrabCar (Rp 40rb)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-suitcase"></i> Hari 3: Pulang
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 10.00 - Check-out
+                            </div>
+                            <div class="activity-desc">Check-out dari penginapan dan beli oleh-oleh khas Bandung.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 12.00 - Kembali ke Karawang
+                            </div>
+                            <div class="activity-desc">Naik KA Argo Parahyangan dari Bandung ke Karawang (Rp 120rb/orang, total Rp 240rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta Api (2.5 jam)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-wallet"></i> Perkiraan Budget (untuk 2 orang)
+                    </div>
+                    <div class="budget-summary">
+                        <div class="budget-item">
+                            <span>Transportasi Kereta (PP)</span>
+                            <span>Rp 480rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Penginapan 2 Malam (Glamping)</span>
+                            <span>Rp 1jt</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Transportasi Lokal (Grab)</span>
+                            <span>Rp 300rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Tiket Masuk & Aktivitas</span>
+                            <span>Rp 200rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Makan & Minum (3 hari)</span>
+                            <span>Rp 700rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Oleh-oleh</span>
+                            <span>Rp 200rb</span>
+                        </div>
+                        <div class="budget-total">
+                            <span>Total Perkiraan Budget</span>
+                            <span>Rp 2.8jt - 3.2jt</span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">*Bisa lebih hemat dengan pilihan penginapan dan makan lebih sederhana</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="book-now-btn" onclick="sendSelection('The Lodge Maribaya 3D2N')">
+                        <i class="fas fa-paper-plane"></i> Kirim ke WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Jogja - Borobudur -->
+        <div class="modal" id="jogja-borobudur-modal">
+            <div class="modal-content">
+                <div class="close-modal" onclick="closeModal()">&times;</div>
+                <div class="modal-header" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/31/The_Great_of_Borobudur_Temple.jpg');">
+                    <div class="modal-title">
+                        <h2>Borobudur, Jogja</h2>
+                        <p>3 Hari Wisata Budaya</p>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="section-title">
+                        <i class="fas fa-map-marked-alt"></i> Tentang Perjalanan
+                    </div>
+                    <p>Petualangan budaya ke Candi Borobudur dengan sunrise romantis dan eksplorasi Jogja. Perjalanan menggunakan kereta malam ke Jogja dengan budget terjangkau untuk pasangan.</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-train"></i> Rute Kereta
+                    </div>
+                    <p><strong>Karawang → Jogja</strong>: Naik KA Lodaya Malam (Berangkat 21.00 - Tiba 05.30). Tiket ekonomi Rp 150rb/orang, eksekutif Rp 250rb/orang.</p>
+                    <p><strong>Jogja → Borobudur</strong>: Shuttle bus dari Malioboro (Rp 50rb/orang PP) atau GrabCar (Rp 200rb sekali jalan).</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-calendar-alt"></i> Itinerary 3 Hari
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-moon"></i> Hari 1: Perjalanan Malam
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 21.00 - Berangkat dari Karawang
+                            </div>
+                            <div class="activity-desc">Naik KA Lodaya Malam dari Stasiun Karawang ke Jogja (tiket ekonomi Rp 150rb/orang, total Rp 300rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta Api (8.5 jam)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-sunrise"></i> Hari 2: Sunrise Borobudur
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-bus"></i> 05.30 - Tiba di Jogja & Ke Borobudur
+                            </div>
+                            <div class="activity-desc">Naik shuttle bus ke Borobudur (Rp 50rb/orang PP, total Rp 100rb untuk 2 orang) atau GrabCar (Rp 200rb).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-car"></i></span>
+                                <span>Shuttle (1.5 jam)</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-monument"></i> 07.00 - Sunrise di Borobudur
+                            </div>
+                            <div class="activity-desc">Tiket sunrise Borobudur Rp 450rb untuk 2 orang (termasuk tiket masuk dan guide). Alternatif: masuk biasa setelah jam 9 (Rp 50rb/orang).</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 12.00 - Check-in Penginapan
+                            </div>
+                            <div class="activity-desc">Check-in di penginapan sekitar Borobudur seperti Omah Kombong (Rp 300rb/malam) atau hotel bintang 2 (Rp 400rb/malam).</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-utensils"></i> 13.00 - Makan Siang
+                            </div>
+                            <div class="activity-desc">Makan siang di Restoran Amanjiwo (Rp 100-150rb/orang) atau warung lokal (Rp 40rb/orang).</div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-umbrella-beach"></i> Hari 3: Pulang via Malioboro
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-bus"></i> 08.00 - Kembali ke Jogja Kota
+                            </div>
+                            <div class="activity-desc">Naik shuttle bus kembali ke Jogja (Rp 50rb/orang) untuk explorasi Malioboro sebelum pulang.</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-bus"></i></span>
+                                <span>Shuttle (1.5 jam)</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-shopping-bag"></i> 10.00 - Jalan-jalan Malioboro
+                            </div>
+                            <div class="activity-desc">Belanja oleh-oleh di Malioboro (Rp 100-200rb) seperti bakpia, batik, atau kerajinan.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 16.00 - Kembali ke Karawang
+                            </div>
+                            <div class="activity-desc">Naik KA Lodaya Siang dari Jogja ke Karawang (Rp 150rb/orang, total Rp 300rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta Api (8 jam)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-wallet"></i> Perkiraan Budget (untuk 2 orang)
+                    </div>
+                    <div class="budget-summary">
+                        <div class="budget-item">
+                            <span>Transportasi Kereta (PP Ekonomi)</span>
+                            <span>Rp 600rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Penginapan 1 Malam</span>
+                            <span>Rp 300rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Transportasi Lokal</span>
+                            <span>Rp 200rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Tiket Masuk Borobudur (reguler)</span>
+                            <span>Rp 100rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Makan & Minum (3 hari)</span>
+                            <span>Rp 600rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Oleh-oleh</span>
+                            <span>Rp 300rb</span>
+                        </div>
+                        <div class="budget-total">
+                            <span>Total Perkiraan Budget</span>
+                            <span>Rp 2.1jt - 2.5jt</span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">*Jika memilih paket sunrise, budget bertambah Rp 300rb</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="book-now-btn" onclick="sendSelection('Borobudur Jogja 3D2N')">
+                        <i class="fas fa-paper-plane"></i> Kirim ke WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Jogja - Malioboro -->
+        <div class="modal" id="jogja-malioboro-modal">
+            <div class="modal-content">
+                <div class="close-modal" onclick="closeModal()">&times;</div>
+                <div class="modal-header" style="background-image: url('https://www.yogyes.com/id/yogyakarta-tourism-object/other/malioboro/3.jpg');">
+                    <div class="modal-title">
+                        <h2>Malioboro, Jogja</h2>
+                        <p>3 Hari Wisata Kota</p>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="section-title">
+                        <i class="fas fa-map-marked-alt"></i> Tentang Perjalanan
+                    </div>
+                    <p>Eksplorasi jantung kota Jogja dengan jalan-jalan malam romantis di Malioboro, wisata keraton, dan kuliner lezat. Perjalanan menggunakan kereta dengan budget terjangkau untuk pasangan.</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-train"></i> Rute Kereta
+                    </div>
+                    <p><strong>Karawang → Jogja</strong>: Naik KA Lodaya Pagi (Berangkat 08.00 - Tiba 16.30) atau Malam (21.00 - 05.30). Tiket ekonomi Rp 150rb/orang.</p>
+                    <p><strong>Transportasi Lokal</strong>: Jalan kaki atau becak (Rp 20-50rb) untuk jarak dekat.</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-calendar-alt"></i> Itinerary 3 Hari
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-sun"></i> Hari 1: Perjalanan & Check-in
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 08.00 - Berangkat dari Karawang
+                            </div>
+                            <div class="activity-desc">Naik KA Lodaya Pagi dari Stasiun Karawang ke Jogja (tiket ekonomi Rp 150rb/orang, total Rp 300rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta Api (8.5 jam)</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 16.30 - Check-in Penginapan
+                            </div>
+                            <div class="activity-desc">Check-in di penginapan sekitar Malioboro seperti Dafam Fortuna (Rp 350rb/malam) atau guesthouse (Rp 200rb/malam).</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-utensils"></i> 18.00 - Kuliner Malam Malioboro
+                            </div>
+                            <div class="activity-desc">Makan malam di angkringan Lik Man (Rp 30rb/orang) atau Gudeg Yu Djum (Rp 50rb/orang).</div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-monument"></i> Hari 2: Wisata Kota
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-landmark"></i> 09.00 - Keraton Jogja
+                            </div>
+                            <div class="activity-desc">Kunjungi Keraton Jogja (Rp 15rb/orang) untuk melihat budaya Jawa (buka jam 9-14).</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-shopping-bag"></i> 12.00 - Belanja Batik
+                            </div>
+                            <div class="activity-desc">Beli batik di Beringharjo Market (Rp 100-300rb untuk baju batik).</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-coffee"></i> 15.00 - Kafe Tembi
+                            </div>
+                            <div class="activity-desc">Nongkrong di kafe Tembi (Rp 40rb/orang) dengan suasana pedesaan.</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-motorcycle"></i></span>
+                                <span>Ojek Online (Rp 20rb)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-suitcase"></i> Hari 3: Pulang
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 10.00 - Check-out
+                            </div>
+                            <div class="activity-desc">Check-out dari penginapan dan beli oleh-oleh terakhir.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 12.00 - Kembali ke Karawang
+                            </div>
+                            <div class="activity-desc">Naik KA Lodaya Siang dari Jogja ke Karawang (Rp 150rb/orang, total Rp 300rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta Api (8 jam)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-wallet"></i> Perkiraan Budget (untuk 2 orang)
+                    </div>
+                    <div class="budget-summary">
+                        <div class="budget-item">
+                            <span>Transportasi Kereta (PP Ekonomi)</span>
+                            <span>Rp 600rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Penginapan 2 Malam</span>
+                            <span>Rp 700rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Transportasi Lokal</span>
+                            <span>Rp 100rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Tiket Masuk Wisata</span>
+                            <span>Rp 50rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Makan & Minum (3 hari)</span>
+                            <span>Rp 500rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Oleh-oleh & Belanja</span>
+                            <span>Rp 500rb</span>
+                        </div>
+                        <div class="budget-total">
+                            <span>Total Perkiraan Budget</span>
+                            <span>Rp 2.4jt - 2.8jt</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="book-now-btn" onclick="sendSelection('Malioboro Jogja 3D2N')">
+                        <i class="fas fa-paper-plane"></i> Kirim ke WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Jakarta - Ancol -->
+        <div class="modal" id="jakarta-ancol-modal">
+            <div class="modal-content">
+                <div class="close-modal" onclick="closeModal()">&times;</div>
+                <div class="modal-header" style="background-image: url('https://www.ancol.com/blog/wp-content/uploads/2024/10/ancol-beach-city.jpg');">
+                    <div class="modal-title">
+                        <h2>Ancol, Jakarta</h2>
+                        <p>3 Hari Wisata Pantai</p>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="section-title">
+                        <i class="fas fa-map-marked-alt"></i> Tentang Perjalanan
+                    </div>
+                    <p>Liburan pantai di Ancol dengan wahana Dufan, Sea World, dan restoran romantis. Perjalanan menggunakan Commuter Line dan transportasi lokal dengan budget terjangkau.</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-train"></i> Rute Kereta
+                    </div>
+                    <p><strong>Karawang → Jakarta</strong>: Naik Commuter Line ke Stasiun Tanah Abang (Rp 15rb/orang, 1.5 jam).</p>
+                    <p><strong>Jakarta → Ancol</strong>: Naik TransJakarta atau GrabCar (Rp 50-70rb).</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-calendar-alt"></i> Itinerary 3 Hari
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-sun"></i> Hari 1: Perjalanan & Dufan
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 08.00 - Berangkat dari Karawang
+                            </div>
+                            <div class="activity-desc">Naik Commuter Line ke Jakarta (Rp 15rb/orang, total Rp 30rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta (1.5 jam)</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-car"></i> 10.00 - Ke Ancol
+                            </div>
+                            <div class="activity-desc">Naik GrabCar ke Ancol (Rp 50-70rb) atau TransJakarta (Rp 3.500/orang).</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 11.00 - Check-in Penginapan
+                            </div>
+                            <div class="activity-desc">Check-in di hotel sekitar Ancol seperti Favehotel (Rp 400rb/malam) atau guesthouse (Rp 250rb/malam).</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-umbrella-beach"></i> 13.00 - Pantai Ancol
+                            </div>
+                            <div class="activity-desc">Bermain di Pantai Ancol (tiket masuk Rp 25rb/orang) dan menikmati sunset.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-fish"></i> Hari 2: Sea World & Atlantis
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-water"></i> 09.00 - Sea World
+                            </div>
+                            <div class="activity-desc">Kunjungi Sea World Ancol (Rp 150rb/orang) untuk melihat berbagai biota laut.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-swimming-pool"></i> 13.00 - Atlantis Water Adventure
+                            </div>
+                            <div class="activity-desc">Bermain air di Atlantis (Rp 150rb/orang) dengan berbagai wahana seru.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-suitcase"></i> Hari 3: Pulang
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 10.00 - Check-out
+                            </div>
+                            <div class="activity-desc">Check-out dari penginapan dan beli oleh-oleh di Pasar Seni Ancol.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 12.00 - Kembali ke Karawang
+                            </div>
+                            <div class="activity-desc">Naik Commuter Line kembali ke Karawang (Rp 15rb/orang, total Rp 30rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta (1.5 jam)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-wallet"></i> Perkiraan Budget (untuk 2 orang)
+                    </div>
+                    <div class="budget-summary">
+                        <div class="budget-item">
+                            <span>Transportasi Kereta (PP)</span>
+                            <span>Rp 60rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Penginapan 2 Malam</span>
+                            <span>Rp 800rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Transportasi Lokal</span>
+                            <span>Rp 150rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Tiket Masuk Ancol & Wahana</span>
+                            <span>Rp 700rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Makan & Minum (3 hari)</span>
+                            <span>Rp 600rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Oleh-oleh</span>
+                            <span>Rp 200rb</span>
+                        </div>
+                        <div class="budget-total">
+                            <span>Total Perkiraan Budget</span>
+                            <span>Rp 2.5jt - 2.8jt</span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">*Bisa lebih hemat dengan memilih wahana tertentu saja</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="book-now-btn" onclick="sendSelection('Ancol Jakarta 3D2N')">
+                        <i class="fas fa-paper-plane"></i> Kirim ke WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Jakarta - PIK -->
+        <div class="modal" id="jakarta-pik-modal">
+            <div class="modal-content">
+                <div class="close-modal" onclick="closeModal()">&times;</div>
+                <div class="modal-header" style="background-image: url('https://awsimages.detik.net.id/community/media/visual/2023/07/10/aloha-pik-2_169.jpeg?w=600&q=90');">
+                    <div class="modal-title">
+                        <h2>PIK 2, Jakarta</h2>
+                        <p>3 Hari Kuliner & Hiburan</p>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="section-title">
+                        <i class="fas fa-map-marked-alt"></i> Tentang Perjalanan
+                    </div>
+                    <p>Eksplorasi kawasan PIK 2 dengan suasana ala Venice, kuliner lezat, dan spot foto instagramable. Perjalanan menggunakan Commuter Line dan transportasi online dengan budget terjangkau.</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-train"></i> Rute Kereta
+                    </div>
+                    <p><strong>Karawang → Jakarta</strong>: Naik Commuter Line ke Stasiun Tanah Abang (Rp 15rb/orang, 1.5 jam).</p>
+                    <p><strong>Jakarta → PIK 2</strong>: Naik GrabCar (Rp 70-90rb, 45 menit).</p>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-calendar-alt"></i> Itinerary 3 Hari
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-sun"></i> Hari 1: Perjalanan & Explore PIK
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 08.00 - Berangkat dari Karawang
+                            </div>
+                            <div class="activity-desc">Naik Commuter Line ke Jakarta (Rp 15rb/orang, total Rp 30rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta (1.5 jam)</span>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-car"></i> 10.00 - Ke PIK 2
+                            </div>
+                            <div class="activity-desc">Naik GrabCar ke PIK 2 (Rp 70-90rb) untuk check-in penginapan.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 11.00 - Check-in Penginapan
+                            </div>
+                            <div class="activity-desc">Check-in di RedDoorz atau hotel budget sekitar PIK (Rp 300rb/malam).</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-utensils"></i> 12.00 - Kuliner PIK
+                            </div>
+                            <div class="activity-desc">Makan siang di Pantjoran PIK (Rp 50-100rb/orang) dengan berbagai pilihan makanan.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-camera"></i> Hari 2: Foto & Venice
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-water"></i> 09.00 - Venice Waterfront
+                            </div>
+                            <div class="activity-desc">Foto-foto di Venice Waterfront PIK (gratis) dengan suasana ala Eropa.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-shopping-bag"></i> 12.00 - Mall Kota Kasablanka
+                            </div>
+                            <div class="activity-desc">Jalan-jalan ke Kokas Mall (Rp 50rb GrabCar) untuk belanja dan makan.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-day">
+                        <div class="day-title">
+                            <i class="fas fa-suitcase"></i> Hari 3: Pulang
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-home"></i> 10.00 - Check-out
+                            </div>
+                            <div class="activity-desc">Check-out dari penginapan dan beli oleh-oleh khas Jakarta.</div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-title">
+                                <i class="fas fa-train"></i> 12.00 - Kembali ke Karawang
+                            </div>
+                            <div class="activity-desc">Naik Commuter Line kembali ke Karawang (Rp 15rb/orang, total Rp 30rb untuk 2 orang).</div>
+                            <div class="activity-transport">
+                                <span class="transport-icon"><i class="fas fa-train"></i></span>
+                                <span>Kereta (1.5 jam)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">
+                        <i class="fas fa-wallet"></i> Perkiraan Budget (untuk 2 orang)
+                    </div>
+                    <div class="budget-summary">
+                        <div class="budget-item">
+                            <span>Transportasi Kereta (PP)</span>
+                            <span>Rp 60rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Penginapan 2 Malam</span>
+                            <span>Rp 600rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Transportasi Lokal</span>
+                            <span>Rp 200rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Makan & Minum (3 hari)</span>
+                            <span>Rp 800rb</span>
+                        </div>
+                        <div class="budget-item">
+                            <span>Oleh-oleh & Belanja</span>
+                            <span>Rp 500rb</span>
+                        </div>
+                        <div class="budget-total">
+                            <span>Total Perkiraan Budget</span>
+                            <span>Rp 2.1jt - 2.5jt</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="book-now-btn" onclick="sendSelection('PIK 2 Jakarta 3D2N')">
+                        <i class="fas fa-paper-plane"></i> Kirim ke WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        // Login Functionality
+        document.getElementById('login-btn').addEventListener('click', function() {
+            const username = document.getElementById('username').value.trim().toLowerCase();
+            const day = document.getElementById('day').value;
+            const month = document.getElementById('month').value;
+            const year = document.getElementById('year').value;
+            
+            // Clear previous errors
+            document.getElementById('username-error').style.display = 'none';
+            document.getElementById('password-error').style.display = 'none';
+            
+            // Validate
+            let isValid = true;
+            
+            if(username !== 'ilham') {
+                document.getElementById('username-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if(day !== '03' || month !== '09' || year !== '2002') {
+                document.getElementById('password-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if(isValid) {
+                // Hide login, show app
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('app-container').style.display = 'block';
+                
+                // Show welcome message
+                Swal.fire({
+                    title: 'Selamat Datang Sayangnya ilham! ❤️',
+                    text: 'Ayo kita rencanakan liburan romantis kita...',
+                    icon: 'success',
+                    confirmButtonText: 'Lanjutkan'
+                });
+            }
+        });
+        
+        // Filter Destinations by City
+        function filterDestinations(city) {
+            // Update active tab
+            document.querySelectorAll('.city-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Show/hide destinations
+            const destinations = document.querySelectorAll('.destination-card');
+            destinations.forEach(dest => {
+                if(city === 'all' || dest.getAttribute('data-city') === city) {
+                    dest.style.display = 'block';
+                } else {
+                    dest.style.display = 'none';
+                }
+            });
+        }
+        
+        // Show Detail Modal
+        function showDetail(destination) {
+            document.getElementById(`${destination}-modal`).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close Modal
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Send Selection via WhatsApp
+        function sendSelection(destination) {
+            const phoneNumber = "6285162640797";
+            const message = `❤️ AKU PENGEN KE ${destination.toUpperCase()} BERSAMA KAMU! ❤️%0A%0ASudah aku cek itinerary dan budgetnya cocok! Ayo kita rencanakan bareng...`;
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+            
+            // Close modal first
+            closeModal();
+            
+            // Open WhatsApp
+            window.open(whatsappUrl, '_blank');
+        }
+        
+        // Request Other Destination
+        function requestOtherDestination() {
+            Swal.fire({
+                title: 'Punya Destinasi Lain?',
+                html: `Tulis destinasi impianmu yang belum ada di list, aku akan cek transportasi kereta dan buatkan itinerary khusus untuk kita!`,
+                input: 'text',
+                inputPlaceholder: 'Misal: Surabaya, Malang, Bromo...',
+                showCancelButton: true,
+                confirmButtonText: 'Kirim Request',
+                cancelButtonText: 'Nanti saja',
+                preConfirm: (destination) => {
+                    if (!destination) {
+                        Swal.showValidationMessage('Tulis dulu destinasi yang kamu mau');
+                    }
+                    return destination;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const phoneNumber = "6285162640797";
+                    const message = `❤️ REQUEST DESTINASI BARU! ❤️%0A%0AAku pengen ajak kamu liburan ke ${result.value.toUpperCase()} pakai kereta! Bisa dibantu cari itinerary 3 hari?`;
+                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+                    
+                    window.open(whatsappUrl, '_blank');
+                    
+                    Swal.fire(
+                        'Request Terkirim!',
+                        `Aku akan cek rute kereta ke ${result.value} dan buatkan itinerary khusus untuk kita!`,
+                        'success'
+                    );
+                }
+            });
+        }
+        
+        // Floating Hearts Animation
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts-container');
+            heartsContainer.innerHTML = '';
+            
+            for(let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.classList.add('heart');
+                
+                // Random position and animation
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Initial hearts
+        createHearts();
+        setInterval(createHearts, 3000);
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
